@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,14 +46,23 @@ namespace Mvc1VaccinDemo.Controllers
                         Name = generatdePerson.Name,
                         PersonalNumber = generatdePerson.PersonalNumber,
                         PostalCode = generatdePerson.PostalCode,
-                        StreetAddress = generatdePerson.StreetAddress
+                        StreetAddress = generatdePerson.StreetAddress,
+                        VaccineringsFas = GenerateRandomVaccineringsFas()
                     });
                 }
 
                 _dbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             return View(viewModel);
+        }
+
+        private VaccineringsFas GenerateRandomVaccineringsFas()
+        {
+            var r = new Random();
+            var faser = _dbContext.VaccineringsFaser.ToList();
+            return faser.ElementAt(r.Next(1, faser.Count));
         }
 
         // GET
@@ -90,11 +100,11 @@ namespace Mvc1VaccinDemo.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(int Id)
+        public IActionResult Edit(int id)
         {
             var viewModel = new PersonEditViewModel();
 
-            var dbPerson = _dbContext.Personer.Include(r => r.VaccineringsFas).First(r => r.Id == Id);
+            var dbPerson = _dbContext.Personer.Include(r => r.VaccineringsFas).First(r => r.Id == id);
 
             viewModel.Id = dbPerson.Id;
             viewModel.Name = dbPerson.Name;
