@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mvc1VaccinDemo.Services;
 using Mvc1VaccinDemo.Services.Krisinformation;
+using Mvc1VaccinDemo.Services.PersonGenerator;
 
 namespace Mvc1VaccinDemo
 {
@@ -29,8 +30,10 @@ namespace Mvc1VaccinDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IOrderedVaccinService,OrderedVaccinService>();
+            services.AddTransient<IOrderedVaccinService, OrderedVaccinService>();
             services.AddTransient<IKrisInfoService, KrisInfoService>();
+
+            services.AddTransient<IPersonGeneratorService, PersonGeneratorService>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -70,7 +73,7 @@ namespace Mvc1VaccinDemo
                 endpoints.MapControllerRoute(
                     name: "dump",
                     pattern: "dump.sql",
-                    defaults:new {controller="Home",action="Dump"});
+                    defaults: new { controller = "Home", action = "Dump" });
                 endpoints.MapControllerRoute(
                     name: "dump2",
                     pattern: "backup.zip",
